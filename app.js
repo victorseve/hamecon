@@ -2,8 +2,11 @@ var express = require('express');
 var path = require('path');
 //var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var session = require('express-session');
+// var session = require('express-session');
+var session = require('cookie-session');
 var favicon = require('serve-favicon');
+var fs = require('fs');
+var async = require('async');
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
@@ -34,7 +37,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({secret: 'Mlnd%3)(s?pT6m;1^j{E@?aN?HEn_P'}))
+
+// async function getSecret() {
+//     const sessionSecrets = await fs.readFile('./.myapp/secret.json', (err, data) => {
+//         return JSON.parse(data);
+//     });
+//     return sessionSecrets
+// }
+
+app.use(session({
+    name: 'session', 
+    secret: ';sR%+0X{veS]3-bP(Up]%p^_Q)(5Q[', 
+    cookie: { maxAge: 1000*60*60*24*2 }
+}));
 
 app.all("*", requireLogin, function(req, res, next) {
     console.log('app.all', req.path)
@@ -57,8 +72,8 @@ app.use('/comment', commentRouter);
 
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
-
 function requireLogin(req, res, next) {
+    console.log('requiring login')
     if (req.path=="/users/login") {console.log('path is to login'); return next()};
     if (req.session.user!=undefined) {
         console.log('Valid user, go to next')
