@@ -70,7 +70,6 @@ block content
     
     function getMetaData() {
       const article_url = $("input[name=article_url]").val();
-      console.log(article_url)
       fetch('meta', {
         method: 'POST',
         headers: {
@@ -85,8 +84,6 @@ block content
     }
     var m = {}
     function fillFromMeta(meta) {
-      m = meta
-      console.log(meta)
       meta['published_time'] = meta['published_time'] != undefined ? meta['published_time'].split('T')[0] : {};
       for (key in meta) {
         $(`[name=${key}]`).val(meta[key]);

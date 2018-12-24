@@ -1,99 +1,100 @@
 extends ../layout
 
 block content
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
 
-    h1 Nouveau livre
+  h1 Nouveau livre
 
-    form.white-round-div(method='POST' action='')
+  form.white-round-div(method='POST' action='')
 
-        div.form-group
-            label(for='title') Titre:
-            input#title.form-control(type='text', placeholder='Nom de l\'oeuvre' name='title' required='true')
+    div.form-group
+      label(for='title') Titre:
+      input#title.form-control(type='text', placeholder='Nom de l\'oeuvre' name='title' required='true')
 
-        div.form-group
-            label(for='author') Auteur:
-            select.form-control.selectpicker#select-author(multiple="multiple", data-live-search="true" data-size="10" name='author' required='true' )
-                for author in authors
-                    option(value=author._id)
-                        | #{author.name}
-            button#new-author.btn.btn-outline-dark(type='button') Nouvel auteur
+    div.form-group
+      label(for='author') Auteur:
+      select.form-control.selectpicker#select-author(multiple="multiple", data-live-search="true" data-size="10" name='author' required='true' )
+        for author in authors
+          option(value=author._id)
+            | #{author.name}
+      button#new-author.btn.btn-outline-dark(type='button') Nouvel auteur
 
-        div.form-group
-            label(for='image') Image URL:
-            input#image.form-control(type='text', placeholder='Image URL' name='image' required='true')
+    div.form-group
+      label(for='image') Image URL:
+      input#image.form-control(type='text', placeholder='Image URL' name='image' required='true')
 
-        div.form-group
-            label(for='published') Date de publication:
-            input#published.form-control(type='number', placeholder='Date' min="-2000" max="2100"  name='published' required='true')
+    div.form-group
+      label(for='published') Date de publication:
+      input#published.form-control(type='number', placeholder='Date' min="-2000" max="2100"  name='published' required='true')
 
-        div.form-group
-            label(for='summary') Résumé:
-            textarea#summary.form-control(name="summary" rows='3')
+    div.form-group
+      label(for='summary') Résumé:
+      textarea#summary.form-control(name="summary" rows='3')
 
-        div.form-group
-            label Tag:
-            select.form-control.selectpicker#select-tag(multiple="multiple", data-live-search="true" data-size="5" name='tag' required='true' )
-                for tag in tags
-                    option(value=tag._id)
-                        | #{tag.name}
-            button#new-tag.btn.btn-outline-dark(type='button') Nouveau tag
+    div.form-group
+      label Tag:
+      select.form-control.selectpicker#select-tag(multiple="multiple", data-live-search="true" data-size="5" name='tag' required='true' )
+        for tag in tags
+          option(value=tag._id)
+            | #{tag.name}
+      button#new-tag.btn.btn-outline-dark(type='button') Nouveau tag
 
-        button.btn.btn-outline-primary(type='submit') Envoyer
+    button.btn.btn-outline-primary(type='submit') Envoyer
 
 
-    script.
-        var book = !{JSON.stringify(book)};
-        var inital_tags = !{JSON.stringify(tags)};
-        var inital_authors = !{JSON.stringify(authors)};
-        $(document).ready(function() {
-          // $('#select-tag').selectpicker('val', tags.map(t => t._id));
-        })
+  script.
+    var book = !{JSON.stringify(book)};
+    var initial_tags = !{JSON.stringify(tags)};
+    var initial_authors = !{JSON.stringify(authors)};
 
-        if (Object.keys(book).length) {
-            console.log(book)
-            for (key in book) {
-                var val = book[key];
-                if (key=='published') {
-                    val = parseInt(val.split('-')[0])
-                }
-                $(`input[name=${key}]`).val(val)
-            }
-            $('textarea').val(book.summary)
-            $('#select-author').selectpicker('val', book.author._id);
-            $('#select-tag').selectpicker('val', book.tag.map(tag => tag._id));
+    if (Object.keys(book).length) {
+      for (key in book) {
+        var val = book[key];
+        if (key=='published') {
+          val = parseInt(val.split('-')[0])
         }
+        $(`input[name=${key}]`).val(val)
+      }
+      $('textarea').val(book.summary)
+      $('#select-author').selectpicker('val', book.author._id);
+      $('#select-tag').selectpicker('val', book.tag.map(tag => tag._id));
+    }
 
-        $("#new-tag").click(() => {
-            var win = window.open('/tag/create', 'New tag', "height=450, width=600")
-            win.onbeforeunload = function () {
-                setTimeout(fetch('/library/get-tags').then(response => response.json()).then(results => updateTags(results)), 1000);
-            }
-        })
-        function updateTags(tags) {
-            let current_tags_ids = $('#select-tag').find('option').toArray().map(t=>t.value);
-            console.log('All tags',tags, current_tags_ids)
-            let tag_diff = tags.filter(tag => current_tags_ids.indexOf(tag._id)==-1);
-            if (!tag_diff.length) { return };
-            console.log('Tag diff', tag_diff)
-            let new_tag = tag_diff[0]; 
-            console.log('New tag', new_tag)
-            $('#select-tag').append($('<option>', {value: new_tag._id, text: new_tag.name}));
-            $('#select-tag').selectpicker('refresh');
-        }
+    $("#new-tag").click(() => {
+      var win = window.open('/tag/create', 'New tag', "height=450, width=600")
+      win.onbeforeunload = function () {
+        setTimeout(() => fetch('/library/get-tags').then(response => response.json()).then(results => updateTags(results)), 1000);
+        
+      }
+    })
+    function updateTags(tags) {
+      let tag_diff = tags.filter(tag => initial_tags.map(t=>t._id).indexOf(tag._id)==-1);
+      if (!tag_diff.length) { return };
+      let new_tag = tag_diff[0]; 
+      initial_tags.push(new_tag);
+      $('#select-tag').append($('<option>', {value: new_tag._id, text: new_tag.name}));
+      $('#select-tag').selectpicker('refresh');
+      highlightBtn('#new-tag');
+    }
 
-        $("#new-author").click(() => {
-            var win = window.open('../author/pop_create', 'New author', "height=600, width=600")
-            win.onbeforeunload = function () {
-                fetch('../get-authors').then(response => response.json()).then(results => updateAuthors(results));
-            }
-        })
-        function updateAuthors(authors) {
-            console.log('Authors received')
-            let author_diff = authors.filter(author => inital_authors.map(t=>t._id).indexOf(author._id)==-1);
-            if (!author_diff.length) { return };
-            let new_author = author_diff[0];
-            $('#select-author').append($('<option>', {value: new_author._id, text: new_author.firstname+' '+new_author.lastname}));
-            $('#select-author').selectpicker('refresh');
-        }
+    $("#new-author").click(() => {
+      var win = window.open('../author/pop_create', 'New author', "height=600, width=600")
+      win.onbeforeunload = function () {
+        setTimeout(() => fetch('/library/get-authors').then(response => response.json()).then(results => updateAuthors(results)), 1000);
+      }
+    })
+    function updateAuthors(authors) {
+      let author_diff = authors.filter(author => initial_authors.map(a=>a._id).indexOf(author._id)==-1);
+      if (!author_diff.length) { return };
+      let new_author = author_diff[0];
+      initial_authors.push(new_author);
+      $('#select-author').append($('<option>', {value: new_author._id, text: new_author.first_name+' '+new_author.last_name}));
+      $('#select-author').selectpicker('refresh');
+      highlightBtn('#new-author');
+    }
+
+    function highlightBtn(id) {
+      $(id).css('background-color', 'green');
+      setTimeout(() => $(id).css('background-color', ''), 150);
+    }

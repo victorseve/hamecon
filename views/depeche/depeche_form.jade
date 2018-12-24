@@ -48,17 +48,19 @@ block content
     $("#new-tag").click(() => {
       var win = window.open('../tag/create', 'New tag', "height=400, width=600")
       win.onbeforeunload = function () {
-        setTimeout(() => {}, 1000);
-        fetch('/library/get-tags').then(response => response.json()).then(results => updateTags(results));
+        setTimeout(() => fetch('/library/get-tags').then(response => response.json()).then(results => updateTags(results)), 1000);
       }
     })
     function updateTags(tags) {
-      console.log('All tags',tags)
       let tag_diff = tags.filter(tag => initial_tags.map(t=>t._id).indexOf(tag._id)==-1);
       if (!tag_diff.length) { return };
       let new_tag = tag_diff[0]; 
-      console.log('New tag', new_tag)
       initial_tags.push(new_tag);
       $('#select-tag').append($('<option>', {value: new_tag._id, text: new_tag.name}));
       $('#select-tag').selectpicker('refresh');
+      highlightBtn('#new-tag');
+    }
+    function highlightBtn(id) {
+      $(id).css('background-color', 'green');
+      setTimeout(() => $(id).css('background-color', ''), 150);
     }
