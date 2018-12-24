@@ -21,10 +21,12 @@ exports.user_login_post = function(req, res) {
 
 exports.user_logout_get = function(req, res) {
     if (req.session) {
-        req.session.destroy(function(err) {
-            console.log('redirecting')
-          return res.redirect('/');
-        })
+        // req.session.destroy(function(err) { // is express-session; else return TypeError
+        //     console.log('redirecting')
+        //   return res.redirect('/');
+        // })
+        req.session = null;
+        return res.redirect('/');
     }
 };
 

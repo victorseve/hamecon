@@ -68,14 +68,15 @@ block content
         $("#new-tag").click(() => {
             var win = window.open('/tag/create', 'New tag', "height=450, width=600")
             win.onbeforeunload = function () {
-                fetch('/library/get-tags').then(response => response.json()).then(results => updateTags(results));
+                setTimeout(fetch('/library/get-tags').then(response => response.json()).then(results => updateTags(results)), 1000);
             }
         })
         function updateTags(tags) {
-            console.log('All tags',tags, current_tags)
-            let current_tags = $('#select-tag').find('option').toArray().map(t=>t.value);
-            let tag_diff = tags.filter(tag => current_tags.map(t=>t._id).indexOf(tag._id)==-1);
+            let current_tags_ids = $('#select-tag').find('option').toArray().map(t=>t.value);
+            console.log('All tags',tags, current_tags_ids)
+            let tag_diff = tags.filter(tag => current_tags_ids.indexOf(tag._id)==-1);
             if (!tag_diff.length) { return };
+            console.log('Tag diff', tag_diff)
             let new_tag = tag_diff[0]; 
             console.log('New tag', new_tag)
             $('#select-tag').append($('<option>', {value: new_tag._id, text: new_tag.name}));
@@ -93,6 +94,6 @@ block content
             let author_diff = authors.filter(author => inital_authors.map(t=>t._id).indexOf(author._id)==-1);
             if (!author_diff.length) { return };
             let new_author = author_diff[0];
-            $('#select-author').append($('<option>', {value: new_author._id, text: new_author.name}));
+            $('#select-author').append($('<option>', {value: new_author._id, text: new_author.firstname+' '+new_author.lastname}));
             $('#select-author').selectpicker('refresh');
         }

@@ -10,8 +10,9 @@ var async = require('async');
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://vicouf:Habas193@ds241737.mlab.com:41737/hamecon_db';
+//var mongoDB = 'mongodb://vicouf:Habas193@ds241737.mlab.com:41737/hamecon_db';
 //var mongoDB = 'mongodb://localhost:27017/hamecon';
+var mongoDB = process.env.MONGODB_URI || 'mongodb://localhost:27017/hamecon';
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
@@ -51,10 +52,10 @@ app.use(session({
     cookie: { maxAge: 1000*60*60*24*2 }
 }));
 
-app.all("*", requireLogin, function(req, res, next) {
-    console.log('app.all', req.path)
-    next();
-});
+// app.all("*", requireLogin, function(req, res, next) {
+//     console.log('app.all', req.path)
+//     next();
+// });
 
 app.use(compression());
 

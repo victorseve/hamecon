@@ -4,7 +4,7 @@ var Book = require('../models/book');
 
 exports.tag_get = function(req, res) {
     console.log('trying to get tags')
-    Tag.find({}, (err, tags) => {
+    Tag.find({}).sort('name').exec((err, tags) => {
         if (err) { return console.log(err) }
         console.log(tags)
         res.send(JSON.stringify(tags));
