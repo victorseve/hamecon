@@ -65,10 +65,10 @@ exports.book_create_get = function(req, res) {
     console.log('going to get book')
     async.parallel({
         authors: (callback) => {
-            Author.find(callback)
+            Author.find().sort({last_name: 1}).exec(callback);
         },
         tags: (callback) => {
-            Tag.find(callback)
+            Tag.find().sort({name: 1}).exec(callback);
         }
     }, (err, results) => {
         if (err) { return console.log(err) }
@@ -106,10 +106,10 @@ exports.book_update_get = function(req, res) {
             .exec(callback)
         },
         authors: (callback) => {
-            Author.find(callback)
+            Author.find().sort({last_name: 1}).exec(callback);
         },
         tags: (callback) => {
-            Tag.find(callback)
+            Tag.find().sort({name: 1}).exec(callback);
         }
     }, (err, results) => {
         if (err) { return console.log(err) }

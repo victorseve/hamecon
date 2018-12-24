@@ -24,7 +24,7 @@ exports.depeche_list = function(req, res) {
 
 // GET depeche create.
 exports.depeche_create_get = function(req, res) {
-    Tag.find({}, (err, tags) => {
+    Tag.find({}).sort({name: 1}).exec((err, tags) => {
         console.log(tags)
         if (err) { return console.log(err) }
         res.render('depeche/depeche_form', {tags: tags});
