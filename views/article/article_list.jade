@@ -1,0 +1,55 @@
+extends ../layout
+
+block content
+
+    style.
+        @import url( 'https://use.fontawesome.com/releases/v5.6.1/css/all.css' );
+        .article-div {
+            box-shadow: 3px 3px 5px 1px lightgray;
+            padding: 15px;
+            width: 70%;
+        }
+        .article-div:hover {
+            cursor: pointer;
+            box-shadow: 3px 3px 5px 1px gray;;
+        }
+        .article-title {
+            font-weight: bold;
+        }
+        img {
+            max-width: 100%;
+        }
+        .article-description {
+            font-size: 1.2em;
+            font-style: italic;
+        }
+        
+    .title-bar 
+        h1 Revue de presse
+        button.btn.btn-outline-dark.btn-title.new-article Nouvel article
+
+
+    each article in article_list
+        div.row.article-div.white-round-div(data-url=article.url)
+            p.lead.article-title #{article.title}
+            div.col-md-6
+                img.article-img(src=article.image)
+            div.col-md-6
+                p.article-description #{article.description}
+
+    else 
+        | There are no articles
+
+    +pagination(1, pages, current, '/article/pages/')
+
+    script.
+        $(document).ready(function() {
+            $('.article-div').click(function() {
+                console.log('Click', $(this).data())
+                window.open($(this).data('url'),"_self")
+            })
+        })
+        $('.new-article').click(function() {
+            window.open('article/create',"_self")
+        })
+

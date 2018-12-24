@@ -1,0 +1,46 @@
+extends ../layout
+
+block content
+    h1 #{depeche.title}
+
+    .white-round-div
+        p !{depeche.content}
+
+    hr
+
+    .comment-div
+        h2 Commentaires
+        #comments
+        each comment in depeche.comments
+            p #[strong !{comment.username}:] !{comment.message}
+        .form-group
+        textarea.form-control(name='comment' placeholder='Nouveau commentaire...' minlength=1)
+        button#submit-comment.btn.btn-primary(type='button') Envoyer
+
+    script.
+        var depeche = !{JSON.stringify(depeche)}
+
+        $('#submit-comment').click(function() {
+        if (!$('[name=comment]').val().length) return;
+            fetch('../../comment/comment_depeche_post', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    comment: $('[name=comment]').val(),
+                    doc_id: depeche._id
+                })  
+            }).then(response => response.json())
+                .then(results => insertComment(results))
+                .catch(err => console.log(err));
+        })
+
+        function insertComment(comment) {
+            console.log(comment)
+            $("#comments").append(
+                `<p><b>${comment.username}:</b>&nbsp;${comment.message}</p>`
+            )
+        }

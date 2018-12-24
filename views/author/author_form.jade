@@ -1,0 +1,38 @@
+extends ../layout
+
+block content
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+
+    h1 Nouvel auteur
+
+    form(method='POST' action='')
+
+        div.form-group
+            label(for='first_name') Prénom:
+            input#first_name.form-control(type='text', placeholder='Prénom' name='first_name' required='true')
+
+        div.form-group
+            label(for='last_name') Nom:
+            input#last_name.form-control(type='text', placeholder='Nom' name='last_name' required='true')
+
+        div.form-group
+            label(for='image') Image URL:
+            input#image.form-control(type='text', placeholder='Image URL' name='image' required='true')
+
+        div.form-group
+            label(for='date_of_birth') Date de naissance:
+            input#date_of_birth.form-control(type='date', placeholder='Date' name='date_of_birth' required='true')
+
+        div.form-group
+            label(for='date_of_death') Date de décès:
+            input#date_of_death.form-control(type='date', placeholder='Date' name='date_of_death')
+
+        button.btn.btn-primary(type='submit') Submit
+
+
+    script.
+
+        $(document).ready(function() {
+            //$('#select-tag').selectpicker('val', media.tag.map(t => t._id));
+        })

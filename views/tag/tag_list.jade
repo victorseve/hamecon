@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+
+  h1 List des tags
+  
+  ul
+    each tag in tag_list
+      li 
+        a(href=tag.url) #{tag.name} 
+        |  (#{tag.description})
+
+    else
+      li There are no tags.

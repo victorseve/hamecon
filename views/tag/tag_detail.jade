@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+
+  h1 Tag
+
+  h2 #{tag.name}
+
+  h3 #{tag.description}
+
+  img(src=tag.image)
+
+  button.btn.btn-primary#modify-btn Modify
+  button.btn.btn-danger#delete-btn Delete
+
+  script.
+    
+    var tag = !{JSON.stringify(tag)}
+
+    $("#modify-btn").click(() => {
+        var win = window.open(`../tag/${tag._id}/update`, 'New tag', "height=700, width=1000");
+        win.tag = tag;
+        win.onbeforeunload = function () {
+            location.reload(); 
+        }
+    })
+
+    $("#delete-btn").click(() => {
+        fetch(tag._id + '/delete', {
+            method: 'POST',
+            redirect: 'follow',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ _id: tag._id }),
+        })
+        .then(response => window.location = '/library/tags')
+        .catch((err) => console.log(err))
+    })

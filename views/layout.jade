@@ -1,0 +1,113 @@
+doctype html
+html(lang='en')
+  head
+    title Hameçon
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script	src="https://code.jquery.com/jquery-3.3.1.min.js"	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="	crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+  style.
+
+    html, body, .col-sm-12 {
+      height: 100%;
+      min-height: 100vh;
+      font-family: 'Georgia, serif'
+    }
+    body {
+      background-image: url('/static/images/books.jpg');
+      background-size: cover;
+    }
+    .container {
+      background-color: rgba(245,245,245, 0.95);
+      padding: 5vh 5vw;
+    }
+    .white-round-div {
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      margin-top: 7vh;
+      border:  solid 1px lightgray;
+    }
+    button {
+      margin-top: 10px;
+    }
+    .title-bar > h1, button {
+      display: inline;
+      padding-bottom: 5vh;
+    }
+    .btn-title {
+      position: absolute;
+      right: 20px;
+    }
+    h1 {
+      font-weight: lighter !important;
+    }
+    .logout {
+      position: absolute;
+      right: 50px;
+    }
+    .change-pass {
+      position: absolute;
+      right: 150px;
+    }
+    .pagination {
+      margin-top: 2vh;
+    }
+
+  mixin pagination(start, numpages, curr, base, querystring)
+    - var querystring = querystring?querystring:''
+    - var curr = typeof curr=="string"?parseInt(curr, 10):curr
+    if(numpages > 1)
+      nav.pull-right
+        ul.pagination
+          - if(curr > 1)
+            li.page-item
+              a.page-link(href="#{base}#{curr - 1}#{querystring}")
+                span(aria-hidden="true") &laquo;
+          - else
+            li.page-item.disabled
+              a.page-link(href="#")
+                span(aria-hidden="true") &laquo;
+
+          - var lower = curr-2; if(curr >= (numpages - 2)){lower = (numpages - 4)}
+          - var upper = curr+2; if(upper < 5 && numpages >= 5){upper = 5}
+          - for(var i = lower; i <= upper; ++i)
+            - if (i <= numpages && i > 0)
+              - if (i !== curr)
+                li.page-item
+                  a.page-link(href="#{base}#{i}#{querystring}")=i
+              - else
+                li.page-item.active
+                  a.page-link(href="#{base}#{i}#{querystring}")=i
+          - if(curr < numpages)
+            li.page-item
+              a.page-link(href="#{base}#{curr + 1}#{querystring}")
+                span(aria-hidden="true") &raquo;
+          - else
+            li.page-item.disabled
+              a.page-link(href="#")
+                span(aria-hidden="true") &raquo;
+
+  header
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light.fixed-top
+      .container-fluid
+        a.navbar-brand(href="/") Accueil
+        .collapse.navbar-collapse#navbarNavAltMarkup
+          .navbar-nav
+            a.nav-item.nav-link(href='/library/books') Bibliothèque
+            a.nav-item.nav-link(href='/depeche') Agora
+            a.nav-item.nav-link(href='/article') Revue de presse
+            a.nav-item.nav-link.change-pass(href='users/change_password') Mot de passe
+            a.nav-item.nav-link.logout(href='users/logout') Déconnexion
+    
+  body
+    div(class='container')
+      div(class='row')
+        div(class='col-sm-12')
+          block content
+
+        

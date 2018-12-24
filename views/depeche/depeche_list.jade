@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+
+    style.
+        h3:hover {
+            text-decoration: underline;
+            cursor: pointer
+        }
+        section {
+            padding-left: 20px;
+        }
+
+    div.title-bar
+        h1 Agora
+        button.btn.btn-outline-dark.btn-title.new-depeche Nouvelle dépeche
+  
+    each depeche in depeche_list
+        section.white-round-div
+            h3.depeche-title(data-url=depeche.url) #{depeche.title}
+
+            p !{depeche.content}
+
+    +pagination(1, pages, current, '/depeche/pages')
+
+    script.
+        $(document).ready(function() {
+            $('.depeche-title').click(function() {
+                window.open($(this).data('url'),"_self")
+            })
+            $('.new-depeche').click(function() {
+                window.open('/depeche/create', "_self")
+            })
+        })

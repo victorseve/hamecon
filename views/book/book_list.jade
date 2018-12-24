@@ -1,0 +1,54 @@
+extends ../layout
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+
+block content
+
+  style.
+    img {
+      max-height:40vh;
+      opacity: 0.7;
+      box-shadow: 4px 4px 10px 2px grey;
+      margin: 20px;
+    }
+    img:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+    h1 {
+      font-weight: lighter;
+    }
+    .title {
+      font-size: 2.5rem;
+      font-weight: lighter;
+    }
+
+  div.title-bar
+    h1 Bibliothèque
+    button.btn.btn-outline-dark.btn-title.new-book Nouveau livre
+
+  .d-flex.flex-row.white-round-div
+    each book in book_list
+      .p-2
+        figure
+          img(src=book.image data-url=book.url)
+          figcaption 
+            //- div !{book.title} 
+            //- div (!{book.author.name})
+
+    else
+      li There are no book.
+
+  center
+    +pagination(1, pages, current, '/library/books/pages/')
+
+  
+
+  script.
+    $('img').click(function() {
+      window.open($(this).data('url'), "_self")
+    })
+    $('.new-book').click(function() {
+      window.open('book/create',"_self")
+    })

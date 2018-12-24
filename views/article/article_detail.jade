@@ -1,0 +1,61 @@
+extends ../layout
+
+block content
+
+  style.
+
+  h2 #{article.title}
+
+  div
+    - if (article.article_url.indexOf('youtube')>-1)
+      div#player
+    - else
+      img(src=article.image)
+      
+  p #[strong Site:] #{article.site_name}
+  p #[strong Published:] #{article.published_date}
+
+  p 
+    i #{article.description}
+
+  .white-round-div
+    p 
+      !{article.content}
+
+  .comment-div.white-round-div
+    h3 Commentaires
+    #comments
+        each comment in article.comments
+            p #[strong !{comment.username}:] !{comment.message}
+    .form-group
+      textarea.form-control(name='comment' placeholder='Nouveau commentaire...' minlength=1)
+      button#submit-comment.btn.btn-primary(type='button') Envoyer
+
+  script.
+    var article = !{JSON.stringify(article)}
+
+    $('#submit-comment').click(function() {
+      if (!$('[name=comment]').val().length) return;
+        fetch('../comment/comment_article_post', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                comment: $('[name=comment]').val(),
+                doc_id: article._id
+            })  
+        }).then(response => response.json())
+            .then(results => insertComment(results))
+            .catch(err => console.log(err));
+    })
+
+    function insertComment(comment) {
+        console.log(comment)
+        $("#comments").append(
+            `<p><b>${comment.username}:</b>&nbsp;${comment.message}</p>`
+        )
+    }
+

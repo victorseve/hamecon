@@ -1,0 +1,37 @@
+extends ../layout
+
+block content
+
+  style(type='text/css').
+    .ellipsis {
+        overflow: hidden;
+        position: absolute;
+        max-height: inherit;
+    }
+    .note-container {
+        height: 10vh;
+        max-height: 10vh;
+    }
+    .fadeout {
+        background-image : linear-gradient(
+            rgba(255,255,255, 0), 
+            rgba(255,255,255, 1) 80%);
+        top: 5vh;
+        height: 5vh;
+        width: 80vw;
+        position: relative;
+    }
+
+  h1 List des notes
+
+  ul
+    each note in note_list
+      li
+        a(href=note.url) Note : #{note.book.title} 
+        div.note-container
+            div.ellipsis
+                !{note.content}
+            .fadeout
+
+    else
+      li There are no notes.

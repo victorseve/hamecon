@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+
+  h3 #{author.name}
+
+  .row.white-round-div
+    .col-md-4
+      img(src=author.image)
+    .col-md-8
+        each book in books
+            p
+                a(href=book.url) !{book.title}
+
+
+    button.btn.btn-primary#modify-btn Mettre à jour
+
+  script.
+    
+    var author = !{JSON.stringify(author)}
+
+    $("#modify-btn").click(() => {
+        var win = window.open(`../author/${author._id}/update`, 'Update author', "height=700, width=1000");
+        win.author = author;
+        win.onbeforeunload = function () {
+            location.reload(); 
+        }
+    })
