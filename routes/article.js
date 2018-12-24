@@ -8,7 +8,7 @@ var article_controller = require('../controller/article');
 
 // GET home page
 router.get('/', article_controller.article_list);
-router.get('pages/:page', article_controller.article_list);
+router.get('/pages/:page', article_controller.article_list);
 
 // GET article create.
 router.get('/create', article_controller.article_create_get);
