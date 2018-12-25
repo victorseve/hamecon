@@ -39,23 +39,19 @@ app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// async function getSecret() {
-//     const sessionSecrets = await fs.readFile('./.myapp/secret.json', (err, data) => {
-//         return JSON.parse(data);
-//     });
-//     return sessionSecrets
-// }
+
+content = fs.readFileSync('./.myapp/secret.json', 'utf8');
+SECRET = JSON.parse(content).key;
 
 app.use(session({
     name: 'session', 
-    secret: ';sR%+0X{veS]3-bP(Up]%p^_Q)(5Q[', 
+    secret: SECRET, 
     cookie: { maxAge: 1000*60*60*24*2 }
 }));
 
-// app.all("*", requireLogin, function(req, res, next) {
-//     console.log('app.all', req.path)
-//     next();
-// });
+app.all("*", requireLogin, function(req, res, next) {
+    next();
+});
 
 app.use(compression());
 
@@ -74,13 +70,10 @@ app.use('/comment', commentRouter);
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 function requireLogin(req, res, next) {
-    console.log('requiring login')
     if (req.path=="/users/login") {console.log('path is to login'); return next()};
     if (req.session.user!=undefined) {
-        console.log('Valid user, go to next')
         next(); 
     } else {
-        console.log('No user found')
         res.redirect("/users/login");
     }
 }

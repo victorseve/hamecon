@@ -17,6 +17,14 @@ html(lang='en')
       min-height: 100vh;
       font-family: 'Georgia, serif'
     }
+    @media (max-width: 768px) {
+      .container {
+          min-width: 100%;
+      }
+      .col-sm-12 {
+        min-width: 100%
+      }
+    }
     body {
       background-image: url('/static/images/books.jpg');
       background-size: cover;
@@ -107,7 +115,7 @@ html(lang='en')
   body
     div(class='container')
       div(class='row')
-        div(class='col-sm-12')
+        div(class='col-md-12')
           block content
 
         
