@@ -24,6 +24,7 @@ block content
             button.btn.btn-outline-primary(type='submit') Envoyer
 
     script.
+        var note = !{JSON.stringify(note)}
         var book_id = !{JSON.stringify(book_id)};
         $('input[name=book_id]').val(book_id);
 
@@ -39,5 +40,8 @@ block content
                     ['insert', ['picture', 'link', 'video', 'codeview']]
                 ]
             });
+            if (Object.keys(note).length) {
+                $('.note-editable.card-block').html(note.content);
+            }
         })
 
